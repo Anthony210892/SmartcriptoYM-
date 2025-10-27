@@ -21,8 +21,8 @@ com.example.smartcriptoym.app-jetified-annotation-experimental-1.4.0-19 /home/ub
 com.example.smartcriptoym.app-pngs-20 /home/ubuntu/smartcriptoym/android/app/build/generated/res/pngs/debug
 com.example.smartcriptoym.app-resValues-21 /home/ubuntu/smartcriptoym/android/app/build/generated/res/resValues/debug
 com.example.smartcriptoym.app-rs-22 /home/ubuntu/smartcriptoym/android/app/build/generated/res/rs/debug
-com.example.smartcriptoym.app-packageDebugResources-23 /home/ubuntu/smartcriptoym/android/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
-com.example.smartcriptoym.app-packageDebugResources-24 /home/ubuntu/smartcriptoym/android/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.example.smartcriptoym.app-mergeDebugResources-23 /home/ubuntu/smartcriptoym/android/app/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.example.smartcriptoym.app-mergeDebugResources-24 /home/ubuntu/smartcriptoym/android/app/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
 com.example.smartcriptoym.app-merged_res-25 /home/ubuntu/smartcriptoym/android/app/build/intermediates/merged_res/debug
 com.example.smartcriptoym.app-debug-26 /home/ubuntu/smartcriptoym/android/app/src/debug/res
 com.example.smartcriptoym.app-main-27 /home/ubuntu/smartcriptoym/android/app/src/main/res
