@@ -20,20 +20,19 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: Verify Flutter
-        run: flutter doctor -v
-        working-directory: ${{ github.workspace }}
+      - name: Display current directory
+        run: pwd && ls -la
 
-      - name: Get dependencies
+      - name: Get Flutter dependencies
         run: flutter pub get
         working-directory: ${{ github.workspace }}
 
-      - name: Build debug APK
+      - name: Build Debug APK
         run: flutter build apk --debug
         working-directory: ${{ github.workspace }}
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          path: ${{ github.workspace }}/build/app/outputs/flutter-apk/app-debug.apk
