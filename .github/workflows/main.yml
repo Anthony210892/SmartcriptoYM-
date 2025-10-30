@@ -19,15 +19,16 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # usa tu versión de Flutter
+          flutter-version: '3.24.0'
           channel: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
+        working-directory: ${{ github.workspace }}
 
       - name: Build debug APK
-        working-directory: ${{ github.workspace }}
         run: flutter build apk --debug
+        working-directory: ${{ github.workspace }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
