@@ -1,4 +1,4 @@
-name: Build Flutter APK
+name: Flutter APK Builder - SmartCriptoYM
 
 on:
   push:
@@ -20,19 +20,26 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: Display current directory
-        run: pwd && ls -la
+      - name: Verify workspace
+        run: |
+          echo "📁 Current directory:"
+          pwd
+          echo "📄 Listing files:"
+          ls -la
 
-      - name: Get Flutter dependencies
+      - name: Get dependencies
         run: flutter pub get
+
+      - name: Build Debug APK (Fixed Path)
+        run: |
+          flutter clean
+          flutter pub get
+          mkdir -p $GITHUB_WORKSPACE/build/app/outputs/flutter-apk
+          flutter build apk --debug --target-platform android-arm64
         working-directory: ${{ github.workspace }}
 
-      - name: Build Debug APK
-        run: flutter build apk --debug
-        working-directory: ${{ github.workspace }}
-
-      - name: Upload APK artifact
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: ${{ github.workspace }}/build/app/outputs/flutter-apk/app-debug.apk
+          name: SmartCriptoYM-debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
