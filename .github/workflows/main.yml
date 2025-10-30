@@ -4,27 +4,33 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build_apk:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.24.0' # usa tu versión de Flutter
+          channel: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Debug APK
+      - name: Build debug APK
+        working-directory: ${{ github.workspace }}
         run: flutter build apk --debug
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: App-Debug-APK
+          name: SmartCriptoYM-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
