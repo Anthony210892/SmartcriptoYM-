@@ -20,12 +20,21 @@ jobs:
         with:
           flutter-version: '3.24.0'
 
-      - name: Get dependencies
-        run: flutter pub get
+      - name: Clean Flutter environment
+        run: |
+          flutter clean
+          rm -rf ~/.pub-cache
+          flutter pub get
+
+      - name: Fix workspace path
+        run: |
+          echo "Setting working directory to GitHub workspace..."
+          export HOME=${{ github.workspace }}
+          echo "HOME is now $HOME"
+          mkdir -p $HOME/build/app/outputs/flutter-apk
 
       - name: Build APK
         run: |
-          mkdir -p ${{ github.workspace }}/build/app/outputs/flutter-apk
           flutter build apk --debug --target-platform android-arm64
 
       - name: Upload APK
