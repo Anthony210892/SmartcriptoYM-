@@ -22,13 +22,13 @@ jobs:
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🏗️ Force correct working directory and build
-        working-directory: ${{ github.workspace }}
+      - name: 🏗️ Build APK (force correct path)
         run: |
           echo "Current directory: $(pwd)"
           ls -la
-          cd android && cd ..
-          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0 --build-number=1
+          cd $GITHUB_WORKSPACE
+          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0
+        working-directory: ${{ github.workspace }}
 
       - name: 📤 Upload APK artifact
         uses: actions/upload-artifact@v4
