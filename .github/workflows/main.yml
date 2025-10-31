@@ -1,4 +1,4 @@
-name: Build Flutter APK
+name: Build Flutter APK (Clean)
 
 on:
   push:
@@ -13,33 +13,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Remove all cached data (Gradle, Flutter, Ubuntu)
+        run: |
+          echo "🧹 Cleaning entire environment..."
+          sudo rm -rf /home/ubuntu || true
+          sudo rm -rf ~/.gradle || true
+          sudo rm -rf ~/.pub-cache || true
+          sudo rm -rf android/.gradle || true
+          sudo rm -rf build || true
+          sudo rm -rf /usr/local/lib/android || true
+          echo "✅ Clean complete."
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
 
-      - name: Clean environment (Flutter + Gradle)
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK (debug)
         run: |
+          echo "🏗️ Building APK..."
           flutter clean
-          rm -rf ~/.pub-cache
-          rm -rf ~/.gradle
-          rm -rf android/.gradle
-          flutter pub get
-
-      - name: Force correct working directory
-        run: |
-          echo "Fixing build paths..."
-          export HOME=$GITHUB_WORKSPACE
-          export ANDROID_HOME=$HOME/.android
-          mkdir -p $HOME/build/app/outputs/flutter-apk
-          echo "HOME is now $HOME"
-
-      - name: Run Flutter doctor (check setup)
-        run: flutter doctor -v
-
-      - name: Build APK
-        run: |
-          cd $GITHUB_WORKSPACE
           flutter build apk --debug --target-platform android-arm64
 
       - name: Upload APK
