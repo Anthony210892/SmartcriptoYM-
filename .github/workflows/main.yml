@@ -1,54 +1,35 @@
-name: Build Flutter APK (with Android SDK)
+name: Build Flutter APK
 
 on:
   push:
-    branches: [ "main" ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clean environment
-        run: |
-          echo "🧹 Cleaning environment..."
-          sudo rm -rf ~/.gradle ~/.pub-cache android/.gradle build || true
-          echo "✅ Clean complete."
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 33
-          build-tools: 30.0.3
-          cmake: 3.10.2.4988404
-          components: platform-tools
-
-      - name: Set up Flutter
+      - name: ⚙️ Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
 
-      - name: Get dependencies
+      - name: 🛠️ Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 📦 Get dependencies
         run: flutter pub get
 
-      - name: Build APK (Debug)
-        run: |
-          echo "🏗️ Building APK..."
-          flutter clean
-          flutter build apk --debug --target-platform android-arm64
+      - name: 🏗️ Build APK (inside workspace)
+        working-directory: ${{ github.workspace }}
+        run: flutter build apk --debug --target-platform android-arm64
 
-      - name: Upload APK artifact
+      - name: 📤 Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SmartCriptoYM-debug
+          name: SmartCriptoYM-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
