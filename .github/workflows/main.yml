@@ -1,34 +1,40 @@
-name: Build Flutter APK
+name: Flutter CI
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout repository
-        uses: actions/checkout@v4
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v3
 
-      - name: 🧱 Set up Flutter
+      - name: 🛠️ Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: 🔍 Check Flutter version
+        run: flutter --version
 
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🏗️ Build debug APK (force workspace path)
+      - name: 🏗️ Build Flutter APK (correct path)
         run: |
-          cd $GITHUB_WORKSPACE/android
+          cd android
           echo "Building inside: $(pwd)"
-          flutter build apk --debug --target-platform android-arm64
+          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0
 
-      - name: 📤 Upload APK artifact
+      - name: 📤 Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: SmartCriptoYM-debug
