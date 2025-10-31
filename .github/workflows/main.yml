@@ -27,6 +27,7 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -la
+          cd android && cd ..
           flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0 --build-number=1
 
       - name: 📤 Upload APK artifact
