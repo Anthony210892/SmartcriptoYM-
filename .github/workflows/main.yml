@@ -1,4 +1,4 @@
-name: Build Flutter APK (Clean)
+name: Build Flutter APK (with Android SDK)
 
 on:
   push:
@@ -13,16 +13,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove all cached data (Gradle, Flutter, Ubuntu)
+      - name: Clean environment
         run: |
-          echo "🧹 Cleaning entire environment..."
-          sudo rm -rf /home/ubuntu || true
-          sudo rm -rf ~/.gradle || true
-          sudo rm -rf ~/.pub-cache || true
-          sudo rm -rf android/.gradle || true
-          sudo rm -rf build || true
-          sudo rm -rf /usr/local/lib/android || true
+          echo "🧹 Cleaning environment..."
+          sudo rm -rf ~/.gradle ~/.pub-cache android/.gradle build || true
           echo "✅ Clean complete."
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 33
+          build-tools: 30.0.3
+          cmake: 3.10.2.4988404
+          components: platform-tools
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -32,13 +41,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK (debug)
+      - name: Build APK (Debug)
         run: |
           echo "🏗️ Building APK..."
           flutter clean
           flutter build apk --debug --target-platform android-arm64
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: SmartCriptoYM-debug
