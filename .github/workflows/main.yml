@@ -3,8 +3,6 @@ name: Build Flutter APK
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -20,21 +18,28 @@ jobs:
         with:
           flutter-version: '3.24.0'
 
-      - name: Clean Flutter environment
+      - name: Clean environment (Flutter + Gradle)
         run: |
           flutter clean
           rm -rf ~/.pub-cache
+          rm -rf ~/.gradle
+          rm -rf android/.gradle
           flutter pub get
 
-      - name: Fix workspace path
+      - name: Force correct working directory
         run: |
-          echo "Setting working directory to GitHub workspace..."
-          export HOME=${{ github.workspace }}
-          echo "HOME is now $HOME"
+          echo "Fixing build paths..."
+          export HOME=$GITHUB_WORKSPACE
+          export ANDROID_HOME=$HOME/.android
           mkdir -p $HOME/build/app/outputs/flutter-apk
+          echo "HOME is now $HOME"
+
+      - name: Run Flutter doctor (check setup)
+        run: flutter doctor -v
 
       - name: Build APK
         run: |
+          cd $GITHUB_WORKSPACE
           flutter build apk --debug --target-platform android-arm64
 
       - name: Upload APK
