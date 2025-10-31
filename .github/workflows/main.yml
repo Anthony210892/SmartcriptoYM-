@@ -2,8 +2,9 @@ name: Build Flutter APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -11,23 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🧰 Set up Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
 
-      - name: 📦 Get dependencies
+      - name: Get dependencies
         run: flutter pub get
-        working-directory: ${{ github.workspace }}
 
-      - name: 🏗️ Build debug APK
-        run: flutter build apk --debug
-        working-directory: ${{ github.workspace }}
+      - name: Build APK
+        run: |
+          mkdir -p ${{ github.workspace }}/build/app/outputs/flutter-apk
+          flutter build apk --debug --target-platform android-arm64
 
-      - name: 📤 Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: SmartCriptoYM-debug
