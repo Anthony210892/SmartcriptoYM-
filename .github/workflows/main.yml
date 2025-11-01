@@ -20,15 +20,12 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: 🧩 Fix HOME for GitHub Actions
+      - name: 🧩 Set correct HOME for build
         run: |
-          echo "✅ Setting HOME to GITHUB_WORKSPACE"
+          echo "✅ Setting HOME to GitHub Workspace"
           echo "HOME=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-          echo "HOME is now set to $GITHUB_WORKSPACE"
-          mkdir -p $GITHUB_WORKSPACE/home
-          echo "HOME=$GITHUB_WORKSPACE/home" >> $GITHUB_ENV
+          echo "HOME is now set to: $GITHUB_WORKSPACE"
           ls -la $GITHUB_WORKSPACE
-          echo "✅ HOME adjusted successfully"
 
       - name: 📦 Install dependencies
         run: flutter pub get
@@ -37,6 +34,7 @@ jobs:
         env:
           HOME: ${{ github.workspace }}
           ANDROID_HOME: /usr/local/lib/android/sdk
+          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
         run: |
           echo "🏠 HOME path: $HOME"
           echo "📁 Workspace: $GITHUB_WORKSPACE"
