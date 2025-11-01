@@ -1,0 +1,40 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🧹 Clean previous builds
+        run: flutter clean
+
+      - name: 🏗️ Build Flutter APK
+        run: |
+          export HOME=$GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE/android
+          echo "Building inside: $(pwd)"
+          flutter build apk --debug
+
+      - name: 📤 Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmartCriptoYM-debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
