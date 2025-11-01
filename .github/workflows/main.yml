@@ -35,11 +35,17 @@ jobs:
 
       - name: 🧹 Clean & Build APK
         env:
-          HOME: ${{ env.HOME }}
+          HOME: ${{ github.workspace }}
+          ANDROID_HOME: /usr/local/lib/android/sdk
         run: |
-          echo "🏠 HOME path during build: $HOME"
+          echo "🏠 HOME path: $HOME"
+          echo "📁 Workspace: $GITHUB_WORKSPACE"
           flutter clean
-          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0 --build-number=1
+          flutter pub get
+          cd android
+          ./gradlew clean
+          cd ..
+          flutter build apk --debug --target-platform android-arm64
 
       - name: 📤 Upload build artifact
         uses: actions/upload-artifact@v4
