@@ -1,4 +1,4 @@
-name: Flutter CI
+lname: Flutter CI
 
 on:
   push:
@@ -8,11 +8,12 @@ on:
     branches:
       - main
 
-jobs:  build:
+jobs:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout repository
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v3
 
       - name: 🛠️ Set up Flutter
@@ -27,14 +28,13 @@ jobs:  build:
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🏗️ Clean and Build Flutter APK
-        working-directory: ${{ github.workspace }}
+      - name: 🧹 Clean and Build Flutter APK
         run: |
           echo "Cleaning previous builds..."
           flutter clean
           flutter pub get
           echo "Building APK..."
-          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0
+          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0 --build-number=1
 
       - name: 📤 Upload build artifact
         uses: actions/upload-artifact@v4
