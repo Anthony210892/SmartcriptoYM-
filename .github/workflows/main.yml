@@ -2,11 +2,9 @@ name: Flutter CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
@@ -22,10 +20,12 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: 🔧 Set environment HOME path
+      - name: 🧩 Fix HOME directory
         run: |
           echo "HOME=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-          echo "✅ HOME set to: $GITHUB_WORKSPACE"
+          echo "HOME is now set to $GITHUB_WORKSPACE"
+          mkdir -p $GITHUB_WORKSPACE/home
+          export HOME=$GITHUB_WORKSPACE/home
 
       - name: 📦 Install dependencies
         run: flutter pub get
