@@ -20,11 +20,12 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: 🧩 Set correct HOME for build
+      - name: 🧩 Fix HOME and permissions
         run: |
-          echo "✅ Setting HOME to GitHub Workspace"
           echo "HOME=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-          echo "HOME is now set to: $GITHUB_WORKSPACE"
+          mkdir -p $GITHUB_WORKSPACE/.gradle
+          mkdir -p $GITHUB_WORKSPACE/.pub-cache
+          chmod -R 777 $GITHUB_WORKSPACE
           ls -la $GITHUB_WORKSPACE
 
       - name: 📦 Install dependencies
@@ -34,16 +35,13 @@ jobs:
         env:
           HOME: ${{ github.workspace }}
           ANDROID_HOME: /usr/local/lib/android/sdk
-          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
         run: |
-          echo "🏠 HOME path: $HOME"
-          echo "📁 Workspace: $GITHUB_WORKSPACE"
           flutter clean
           flutter pub get
           cd android
-          ./gradlew clean
+          ./gradlew clean || true
           cd ..
-          flutter build apk --debug --target-platform android-arm64
+          flutter build apk --debug --target-platform android-arm64 --verbose
 
       - name: 📤 Upload build artifact
         uses: actions/upload-artifact@v4
