@@ -8,8 +8,7 @@ on:
     branches:
       - main
 
-jobs:
-  build:
+jobs:  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,10 +27,13 @@ jobs:
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🏗️ Build Flutter APK (correct path)
+      - name: 🏗️ Clean and Build Flutter APK
+        working-directory: ${{ github.workspace }}
         run: |
-          cd android
-          echo "Building inside: $(pwd)"
+          echo "Cleaning previous builds..."
+          flutter clean
+          flutter pub get
+          echo "Building APK..."
           flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0
 
       - name: 📤 Upload build artifact
