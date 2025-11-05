@@ -1,66 +1,31 @@
-mkdir -p .github/workflows
-cat > .github/workflows/main.yml <<'EOF'
-name: Flutter CI - Build APK
+name: Build Flutter APK
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HOME: ${{ github.workspace }}
-      GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-      PATH: /usr/local/lib/android/sdk/platform-tools:/usr/local/lib/android/sdk/cmdline-tools/latest/bin:$PATH
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
+          flutter-version: '3.24.0' # Puedes cambiar a la versión que uses
 
-      - name: Show environment (debug)
-        run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          echo "HOME=$HOME"
-          echo "GRADLE_USER_HOME=$GRADLE_USER_HOME"
-          ls -la $HOME || true
-          ls -la $GITHUB_WORKSPACE || true
-
-      - name: Flutter pub get
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Ensure local.properties for CI
-        run: |
-          cat > android/local.properties <<EOF2
-sdk.dir=/usr/local/lib/android/sdk
-flutter.sdk=/opt/hostedtoolcache/flutter/stable-x64
-EOF2
-          echo "--- android/local.properties ---"
-          cat android/local.properties
-
-      - name: Clean build artifacts
-        run: |
-          flutter clean
-          rm -rf build || true
-
       - name: Build debug APK
-        run: |
-          flutter build apk --debug --target-platform android-arm64 --build-name=1.0.0
+        run: flutter build apk --debug
 
-      - name: Upload build artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SmartCriptoYM-debug
+          name: app-debug
           path: build/app/outputs/flutter-apk/app-debug.apk
-EOF
