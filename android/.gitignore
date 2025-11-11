@@ -13,3 +13,12 @@ key.properties
 **/*.jks
 # Ignore environment-specific properties
 android/local.properties
+# Flutter / Gradle build folders
+build/
+android/app/build/
+android/.gradle/
+.android/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
