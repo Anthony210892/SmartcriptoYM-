@@ -28,9 +28,9 @@ jobs:
 
       - name: 🏗️ Build Flutter APK
         run: |
-          cd android
-          echo "📍 Building inside: $(pwd)"
           flutter build apk --debug
+          echo "✅ APK generado en:"
+          find build/ -name "*.apk"
 
       - name: 📤 Upload APK artifact
         uses: actions/upload-artifact@v4
