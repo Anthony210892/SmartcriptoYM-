@@ -30,13 +30,10 @@ jobs:
         run: |
           flutter build apk --debug
           echo "🔍 Buscando APK generado..."
-          find . -type f -name "*.apk"
+          find $GITHUB_WORKSPACE -type f -name "*.apk" || echo "❌ No se encontró ningún APK"
 
-      - name: 📤 Upload APK artifact (auto detect)
+          - name: 📤 Upload APK artifact (auto detect)
         uses: actions/upload-artifact@v4
         with:
           name: SmartCriptoYM-debug
-          path: |
-            build/app/outputs/flutter-apk/*.apk
-            **/build/app/outputs/flutter-apk/*.apk
-            /home/runner/work/**/build/app/outputs/flutter-apk/*.apk
+          path: '**/*.apk'
