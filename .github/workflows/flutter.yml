@@ -30,7 +30,7 @@ jobs:
         run: |
           flutter build apk --debug
           echo "🔍 Buscando APK generado..."
-          find . -type f -name "*.apk" || echo "❌ No se encontró ningún APK" 
+          find . -type f -name "*.apk" || echo "❌ No se encontró ningún APK"
 
           - name: 📤 Upload APK artifact (auto detect)
         uses: actions/upload-artifact@v4
