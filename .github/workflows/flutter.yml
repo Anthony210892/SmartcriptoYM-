@@ -29,11 +29,13 @@ jobs:
       - name: 🏗️ Build Flutter APK
         run: |
           flutter build apk --debug
-          echo "✅ APK generado en:"
+          echo "🔍 Buscando APK generado..."
           find build/ -name "*.apk"
 
-      - name: 📤 Upload APK artifact
+      - name: 📤 Upload APK artifact (auto-detect path)
         uses: actions/upload-artifact@v4
         with:
           name: SmartCriptoYM-debug
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          path: |
+            build/app/outputs/flutter-apk/*.apk
+            **/build/app/outputs/flutter-apk/*.apk
