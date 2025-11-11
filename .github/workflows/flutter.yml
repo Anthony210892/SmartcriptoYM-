@@ -1,4 +1,4 @@
-name: 🧱 Build Flutter APK
+name: Flutter CI
 
 on:
   push:
@@ -11,29 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repository
+      - name: 📦 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🧰 Setup Flutter
+      - name: 🛠️ Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'  # Ajusta si usas otra versión
-          channel: stable
+          flutter-version: '3.24.3'  # ✅ Usa Dart 3.5 compatible
+          channel: 'stable'
 
-      - name: 📦 Get dependencies
+      - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🧹 Clean build cache
+      - name: 🧹 Clean previous builds
         run: flutter clean
 
       - name: 🏗️ Build Flutter APK
         run: |
-          echo "Building inside: $(pwd)"
+          cd android
+          echo "📍 Building inside: $(pwd)"
           flutter build apk --debug
-          echo "APK built successfully (if no errors above)."
-
-      - name: 🧾 List generated files
-        run: find build/ -type f
 
       - name: 📤 Upload APK artifact
         uses: actions/upload-artifact@v4
