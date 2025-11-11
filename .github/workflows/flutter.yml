@@ -28,9 +28,12 @@ jobs:
 
       - name: 🏗️ Build Flutter APK
         run: |
+          flutter clean
+          flutter pub get
           flutter build apk --debug
           echo "🔍 Buscando APK generado..."
-          find . -type f -name "*.apk" || echo "❌ No se encontró ningún APK"
+          ls -R build/app/outputs/flutter-apk || echo "❌ No se encontró ningún APK en build/app/outputs/flutter-apk"
+          find build -type f -name "*.apk" || echo "❌ No se encontró ningún APK en ningún lugar"
 
           - name: 📤 Upload APK artifact (auto detect)
         uses: actions/upload-artifact@v4
