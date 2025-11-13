@@ -28,8 +28,7 @@ jobs:
           flutter pub get
           flutter build apk --debug
           echo "🔍 Buscando APK generado..."
-          ls -R build/app/outputs/flutter-apk || echo "❌ No se encontró ningún APK en build/app/outputs/flutter-apk"
-          find build -type f -name "*.apk" || echo "❌ No se encontró ningún APK en ningún lugar"
+          find . -type f -name "*.apk"
 
       - name: 📤 Upload APK artifact
         uses: actions/upload-artifact@v4
