@@ -1,32 +1,28 @@
-name: Flutter CI
+name: Flutter Build
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout repository
+      - name: 🔧 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🛠️ Set up Flutter
+      - name: ⚙️ Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'  # ✅ Usa Dart 3.5 compatible
-          channel: 'stable'
+          flutter-version: '3.24.0'
 
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🧹 Clean previous builds
-        run: flutter clean
-
-      - name: 🏗️ Build Flutter APK
+      - name: 🏗️ Build debug APK
         run: |
           flutter clean
           flutter pub get
@@ -35,8 +31,8 @@ jobs:
           ls -R build/app/outputs/flutter-apk || echo "❌ No se encontró ningún APK en build/app/outputs/flutter-apk"
           find build -type f -name "*.apk" || echo "❌ No se encontró ningún APK en ningún lugar"
 
-          - name: 📤 Upload APK artifact (auto detect)
+      - name: 📤 Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SmartCriptoYM-debug
-          path: '**/*.apk'
+          name: app-debug
+          path: build/app/outputs/flutter-apk/*.apk
