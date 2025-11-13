@@ -1,41 +1,42 @@
-name: Flutter CI
+name: Build Flutter APK
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout repository
+      - name: 🧱 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🛠️ Set up Flutter
+      - name: ⚙️ Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'
-          channel: 'stable'
-
-      - name: 🧹 Clean previous builds
-        run: flutter clean
+          flutter-version: "3.24.3"
 
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🏗️ Build debug APK
-        run: |
-          flutter build apk --debug || true
-          echo "🔍 Buscando archivos APK..."
-          ls -R build/ || echo "❌ No se encontró la carpeta build"
-          find . -type f -name "*.apk" || echo "❌ No se encontraron archivos APK"
+      - name: 🧹 Clean previous builds
+        run: flutter clean
 
-      - name: 📤 Upload APK artifact
-        if: success() || always()
+      - name: 🏗️ Build debug APK
+        run: flutter build apk --debug || true
+
+      - name: 🔍 Buscar y listar APK generados
+        run: |
+          echo "🔍 Buscando archivos APK..."
+          find android/app/build/outputs -name "*.apk" || echo "⚠️ No se encontraron APKs"
+
+      - name: 📦 Subir APK como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: SmartCriptoYM-debug
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: app-debug
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/flutter-apk/app-debug.apk
